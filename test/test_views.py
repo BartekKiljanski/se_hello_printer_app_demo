@@ -15,4 +15,9 @@ class FlaskTestCase(unittest.TestCase):
 
     def test_msg_with_output(self):
         rv = self.app.get('/?output=json')
-        self.assertEqual(b'{ "name":"Beata", "mgs":Hello World!"}', rv.data)
+        self.assertEqual(b'{ "name":"Bartlomiej", "mgs":Hello World!"}', rv.data)
+
+    def test_metrics_endpoint(self):
+        rv = self.app.get('/metrics')
+        self.assertEqual(200, rv.status_code)
+        self.assertIn(b'printer_app_http_requests_total', rv.data)

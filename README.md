@@ -1,44 +1,76 @@
-# Simple Flask App
+# se_hello_printer_app_demo
 
-Teaching App displaying name and message in various formats.
+Autor zmian: Bartlomiej Kiljanski
 
-- Technologies:
-  - Flask
-  - Git
-  - pytest
-  - mockup
-  - Flake8
+Projekt przygotowany do cwiczenia z monitorowania aplikacji z GitHuba za pomoca Prometheusa i Grafany.
 
-- In the project we use a virtual environment to create a hermetic environment for the application:
+Oryginalna aplikacja Flask zostala rozszerzona o endpoint `/metrics`, ktory wystawia metryki w formacie Prometheusa. Dodatkowo w katalogu `monitoring/` znajduje sie konfiguracja Prometheusa i Grafany uruchamiana przez Docker Compose.
 
-```bash
-# we create a hermetic environment for application libraries in Windows OS:
-# add Python interpreter
+## Co zostalo dodane
 
-# activating hermetic environment
-venv\Scripts\activate
+- zmiana imienia w aplikacji na `Bartlomiej`,
+- endpoint `/metrics`,
+- metryka `printer_app_http_requests_total`,
+- metryka `printer_app_http_request_duration_seconds`,
+- test sprawdzajacy endpoint metryk,
+- konfiguracja Prometheusa,
+- konfiguracja Docker Compose dla Prometheus + Grafana.
 
-pip install -r requirements.txt
-pip install -r test_requirements.txt
-pip list
-```
+## Uruchomienie aplikacji
 
-Check: [tutorial venv](https://docs.python.org/3/tutorial/venv.html) and [flask libraries](http://flask.pocoo.org).
-
-- Run the application:
-```bash
-# as a program from Terminal
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt -r test_requirements.txt
 python main.py
 ```
 
-```bash
-# from browser or using curl
-curl 127.0.0.1:5000/
+Aplikacja dziala lokalnie pod adresem:
+
+```text
+http://127.0.0.1:5000
 ```
 
-- Run tests (see: http://doc.pytest.org/en/latest/capture.html):
+Metryki sa dostepne pod adresem:
 
-```bash
-pytest
-pytest --verbose -s
+```text
+http://127.0.0.1:5000/metrics
 ```
+
+## Testy
+
+```powershell
+python -m pytest -q
+```
+
+## Prometheus i Grafana
+
+W drugim terminalu:
+
+```powershell
+docker compose -f monitoring/docker-compose.yml up -d
+```
+
+Adresy:
+
+- Prometheus: `http://localhost:9090`
+- Grafana: `http://localhost:3000`
+
+Prometheus scrapuje aplikacje przez:
+
+```text
+host.docker.internal:5000
+```
+
+Przykladowe zapytania PromQL:
+
+```promql
+up{job="github-app-monitoring"}
+printer_app_http_requests_total
+sum by (endpoint) (printer_app_http_requests_total)
+rate(printer_app_http_request_duration_seconds_count[1m])
+```
+
+## Dokumentacja
+
+Sprawozdanie z wykonania zadania jest przygotowywane osobno w pliku Word/PDF ze zrzutami ekranu.
