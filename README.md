@@ -1,7 +1,5 @@
 # se_hello_printer_app_demo
 
-Autor zmian: Bartlomiej Kiljanski
-
 Projekt przygotowany do cwiczenia z monitorowania aplikacji z GitHuba za pomoca Prometheusa i Grafany.
 
 Oryginalna aplikacja Flask zostala rozszerzona o endpoint `/metrics`, ktory wystawia metryki w formacie Prometheusa. Dodatkowo w katalogu `monitoring/` znajduje sie konfiguracja Prometheusa i Grafany uruchamiana przez Docker Compose.
@@ -78,10 +76,6 @@ printer_app_http_requests_total
 sum by (endpoint) (printer_app_http_requests_total)
 rate(printer_app_http_request_duration_seconds_count[1m])
 ```
-
-## Dokumentacja
-
-Sprawozdanie z wykonania zadania jest przygotowywane osobno w pliku Word/PDF ze zrzutami ekranu.
 
 ## Uwagi
 
